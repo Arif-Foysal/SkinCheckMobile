@@ -1,110 +1,269 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
+import {
+  Surface,
+  Card,
+  Text,
+  Button,
+  Avatar,
+  List,
+  Divider,
+  IconButton,
+} from 'react-native-paper';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useAuth } from '@/contexts/AuthContext';
+import { router } from 'expo-router';
 
-export default function TabTwoScreen() {
+export default function ProfileScreen() {
+  const { user, signOut } = useAuth();
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Sign Out', 
+          style: 'destructive',
+          onPress: async () => {
+            await signOut();
+            router.replace('/(auth)/login');
+          }
+        }
+      ]
+    );
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Delete Account',
+      'This action cannot be undone. All your scan history will be permanently deleted.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive',
+          onPress: () => {
+            // TODO: Implement account deletion API call
+            console.log('Delete account requested');
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
       headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
+        <Surface style={styles.headerImageContainer} elevation={0}>
+          <Avatar.Icon size={120} icon="account" style={styles.headerIcon} />
+        </Surface>
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Profile</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
+
+      {/* User Info Card */}
+      <Surface style={styles.userCard} elevation={2}>
+        <Card.Content style={styles.userContent}>
+          <Avatar.Icon size={60} icon="account" style={styles.userAvatar} />
+          <ThemedView style={styles.userInfo}>
+            <Text variant="headlineSmall" style={styles.userName}>
+              {user?.email || 'User'}
+            </Text>
+            <Text variant="bodyMedium" style={styles.userSubtitle}>
+              SkinCheck Member
+            </Text>
+          </ThemedView>
+        </Card.Content>
+      </Surface>
+
+      {/* Settings Section */}
+      <Surface style={styles.settingsCard} elevation={1}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          Account Settings
+        </Text>
+        
+        <List.Item
+          title="Privacy & Security"
+          description="Manage your privacy settings"
+          left={(props) => <List.Icon {...props} icon="shield-account" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => console.log('Privacy settings')}
+        />
+        
+        <Divider />
+        
+        <List.Item
+          title="Notifications"
+          description="Control your notification preferences"
+          left={(props) => <List.Icon {...props} icon="bell" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => console.log('Notification settings')}
+        />
+        
+        <Divider />
+        
+        <List.Item
+          title="Data & Storage"
+          description="Manage your scan history and data"
+          left={(props) => <List.Icon {...props} icon="database" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => console.log('Data settings')}
+        />
+      </Surface>
+
+      {/* Support Section */}
+      <Surface style={styles.supportCard} elevation={1}>
+        <Text variant="titleMedium" style={styles.sectionTitle}>
+          Support & Information
+        </Text>
+        
+        <List.Item
+          title="Help & FAQ"
+          description="Get answers to common questions"
+          left={(props) => <List.Icon {...props} icon="help-circle" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => console.log('Help & FAQ')}
+        />
+        
+        <Divider />
+        
+        <List.Item
+          title="Medical Disclaimer"
+          description="Important medical information"
+          left={(props) => <List.Icon {...props} icon="alert-circle" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => console.log('Medical disclaimer')}
+        />
+        
+        <Divider />
+        
+        <List.Item
+          title="About SkinCheck"
+          description="Version 1.0.0"
+          left={(props) => <List.Icon {...props} icon="information" />}
+          right={(props) => <List.Icon {...props} icon="chevron-right" />}
+          onPress={() => console.log('About')}
+        />
+      </Surface>
+
+      {/* Danger Zone */}
+      <Surface style={styles.dangerCard} elevation={1}>
+        <Text variant="titleMedium" style={[styles.sectionTitle, styles.dangerTitle]}>
+          Danger Zone
+        </Text>
+        
+        <List.Item
+          title="Delete Account"
+          description="Permanently delete your account and all data"
+          left={(props) => <List.Icon {...props} icon="delete" color="#f44336" />}
+          titleStyle={styles.dangerText}
+          onPress={handleDeleteAccount}
+        />
+      </Surface>
+
+      {/* Logout Button */}
+      <ThemedView style={styles.logoutContainer}>
+        <Button
+          mode="contained"
+          buttonColor="#f44336"
+          onPress={handleLogout}
+          style={styles.logoutButton}
+          icon="logout"
+        >
+          Sign Out
+        </Button>
+      </ThemedView>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  // Header styles matching other screens
+  headerImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  headerIcon: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
   },
   titleContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
+    marginBottom: 16,
+  },
+
+  // User Info Card
+  userCard: {
+    margin: 16,
+    borderRadius: 12,
+  },
+  userContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  userAvatar: {
+    backgroundColor: '#4caf50',
+    marginRight: 16,
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  userSubtitle: {
+    opacity: 0.7,
+  },
+
+  // Settings Cards
+  settingsCard: {
+    margin: 16,
+    marginTop: 8,
+    borderRadius: 12,
+    padding: 8,
+  },
+  supportCard: {
+    margin: 16,
+    marginTop: 8,
+    borderRadius: 12,
+    padding: 8,
+  },
+  dangerCard: {
+    margin: 16,
+    marginTop: 8,
+    borderRadius: 12,
+    padding: 8,
+    backgroundColor: '#fff3e0',
+  },
+  sectionTitle: {
+    fontWeight: 'bold',
+    marginBottom: 8,
+    marginLeft: 16,
+    marginTop: 8,
+  },
+  dangerTitle: {
+    color: '#f44336',
+  },
+  dangerText: {
+    color: '#f44336',
+  },
+
+  // Logout
+  logoutContainer: {
+    margin: 16,
+    marginTop: 24,
+  },
+  logoutButton: {
+    paddingVertical: 6,
   },
 });

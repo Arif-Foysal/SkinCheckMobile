@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
+import { Button, Card, Text, Surface, Divider, IconButton } from 'react-native-paper';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -35,6 +36,49 @@ export default function HomeScreen() {
           to open developer tools.
         </ThemedText>
       </ThemedView>
+      
+      {/* React Native Paper Components Demo */}
+      <Surface style={styles.paperDemo} elevation={2}>
+        <Text variant="headlineSmall" style={styles.paperTitle}>
+          React Native Paper Components
+        </Text>
+        <Divider style={styles.divider} />
+        
+        <Card style={styles.card}>
+          <Card.Title 
+            title="Sample Card" 
+            subtitle="This is a Paper component"
+            left={(props) => <IconButton {...props} icon="heart" />}
+          />
+          <Card.Content>
+            <Text variant="bodyMedium">
+              This card demonstrates React Native Paper components in action.
+            </Text>
+          </Card.Content>
+          <Card.Actions>
+            <Button mode="text">Cancel</Button>
+            <Button mode="contained">Ok</Button>
+          </Card.Actions>
+        </Card>
+        
+        <Button 
+          mode="outlined" 
+          icon="camera" 
+          style={styles.button}
+          onPress={() => console.log('Button pressed!')}
+        >
+          Take Photo
+        </Button>
+        
+        <Button 
+          mode="contained" 
+          icon="send" 
+          style={styles.button}
+          onPress={() => console.log('Send pressed!')}
+        >
+          Send Report
+        </Button>
+      </Surface>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
         <ThemedText>
@@ -71,5 +115,23 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  paperDemo: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 12,
+  },
+  paperTitle: {
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  divider: {
+    marginVertical: 16,
+  },
+  card: {
+    marginVertical: 8,
+  },
+  button: {
+    marginVertical: 4,
   },
 });

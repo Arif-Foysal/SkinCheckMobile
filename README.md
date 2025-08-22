@@ -1,50 +1,118 @@
-# Welcome to your Expo app 👋
+# SkinCheck Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application for AI-powered skin analysis using React Native Paper for the UI.
 
-## Get started
+## Features
 
-1. Install dependencies
+### Authentication System
+- **Login Screen**: Email/password authentication with the SkinCheck API
+- **Signup Screen**: User registration with email verification
+- **Persistent Sessions**: Automatic login state management using AsyncStorage
+- **Secure Logout**: Complete session cleanup
 
-   ```bash
-   npm install
-   ```
+### Main Application
+- **Home Screen**: React Native Paper component showcase and app overview
+- **Scan Screen**: Camera interface for skin lesion analysis
+- **History Screen**: Medical scan history with filtering and sorting
+- **Profile Screen**: User account management and settings
 
-2. Start the app
+### API Integration
+- **Authentication API**: Login and signup endpoints
+- **Medical Scan API**: Upload and analysis endpoints (ready for integration)
+- **Secure Headers**: Bearer token authentication for all API calls
 
-   ```bash
-   npx expo start
-   ```
+## Getting Started
 
-In the output, you'll find options to open the app in a
+### Prerequisites
+- Node.js
+- Expo CLI
+- React Native development environment
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Installation
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+1. Install dependencies:
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install additional required packages:
+```bash
+npm install @react-native-async-storage/async-storage
+```
 
-## Learn more
+3. Start the development server:
+```bash
+npm run start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Project Structure
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+app/
+├── (auth)/              # Authentication screens
+│   ├── _layout.tsx      # Auth stack layout
+│   ├── login.tsx        # Login screen
+│   └── signup.tsx       # Signup screen
+├── (tabs)/              # Main app screens
+│   ├── _layout.tsx      # Tab navigation layout
+│   ├── index.tsx        # Home screen
+│   ├── scan.tsx         # Camera/scan screen
+│   ├── history.tsx      # Scan history screen
+│   └── profile.tsx      # User profile screen
+├── _layout.tsx          # Root layout with auth provider
+└── index.tsx            # App entry point with auth routing
 
-## Join the community
+contexts/
+└── AuthContext.tsx      # Authentication state management
 
-Join our community of developers creating universal apps.
+constants/
+└── PaperTheme.ts        # React Native Paper theme configuration
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+utils/
+└── api.ts               # API utility functions
+```
+
+## Authentication Flow
+
+1. **App Launch**: Check for stored authentication data
+2. **Unauthenticated**: Redirect to login screen
+3. **Login**: Authenticate with API and store user data
+4. **Authenticated**: Access main app features
+5. **Logout**: Clear stored data and return to login
+
+## API Endpoints
+
+### Authentication
+- **Login**: `POST https://arif194-skincheck.hf.space/auth/`
+- **Signup**: `POST https://arif194-skincheck.hf.space/signup/`
+
+### Medical Scans
+- **Get History**: `GET https://skincheck-yy0v.onrender.com/upload/history` (with Bearer token)
+- **Delete Scan**: `DELETE https://skincheck-yy0v.onrender.com/upload/{id}` (with Bearer token) - Ready for implementation
+
+## Development Notes
+
+### Current Status
+- ✅ Authentication system complete
+- ✅ UI components with React Native Paper
+- ✅ Navigation and routing
+- ✅ Real API integration for scan history
+- ✅ Pull-to-refresh functionality
+- 🔄 Delete API endpoint ready for implementation
+- 🔄 Image upload functionality ready for implementation
+
+### Next Steps
+1. Implement delete API endpoint integration
+2. Add image upload functionality in `scan.tsx`
+3. Test with production API endpoints
+4. Add real-time scan result updates
+
+### Theme
+The app uses a custom React Native Paper theme optimized for medical applications with appropriate colors for health-related content.
+
+## Contributing
+
+1. Follow the existing code structure
+2. Use React Native Paper components consistently
+3. Update authentication headers for all API calls
+4. Test authentication flow thoroughly
