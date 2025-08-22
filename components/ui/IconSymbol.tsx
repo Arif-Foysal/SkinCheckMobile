@@ -21,7 +21,8 @@ const MAPPING = {
   'clock.fill': 'access-time',
   'qrcode.viewfinder': 'qr-code-scanner', // Add this for scan functionality
   'camera': 'camera',
-  'person.fill': 'person'
+  'person.fill': 'person',
+  'image.fill': 'image',
 
 
 } as IconMapping;
