@@ -304,6 +304,19 @@ export default function ScanScreen() {
         <Text variant="bodySmall" style={styles.disclaimer}>
           Disclaimer: This app is for screening purposes only. Always consult a healthcare professional.
         </Text>
+        
+        {/* Floating Action Button for retaking picture */}
+        <FAB
+          icon="camera"
+          style={styles.fab}
+          onPress={() => {
+            resetImage();
+            // Small delay to ensure state is reset before showing camera
+            setTimeout(() => setIsCameraActive(true), 100);
+          }}
+          label="Retake"
+          disabled={analyzing}
+        />
       </Surface>
     );
   }
@@ -544,5 +557,11 @@ const styles = StyleSheet.create({
     color: '#856404',
     textAlign: 'center',
     lineHeight: 18,
+  },
+  fab: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    backgroundColor: '#6200ee',
   },
 });
